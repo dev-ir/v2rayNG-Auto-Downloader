@@ -267,18 +267,80 @@
             }).join('') || '<p class="text-center">نسخه‌ای برای نمایش موجود نیست.</p>';
         }
 
-        async function fetchJson(path) {
-            const response = await fetch(API + path, {headers: {'Accept': 'application/vnd.github+json'}});
-            if (!response.ok) {
-                const message = response.status === 403 || response.status === 429
-                    ? 'محدودیت درخواست GitHub؛ کمی بعد دوباره تلاش کنید.'
-                    : response.status === 404 ? 'نسخه درخواستی پیدا نشد.'
-                    : 'خطا در دریافت اطلاعات از GitHub؛ دوباره تلاش کنید.';
-                const error = new Error(message);
-                error.status = response.status;
-                throw error;
+        let backupPromise = null;
+        let backupUpdatedAt = null;
+
+        async function requestJson(url, timeout = 5000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeout);
+            try {
+                // Simple GET avoids an unnecessary CORS preflight.
+                const response = await fetch(url, {signal: controller.signal});
+                if (!response.ok) {
+                    const error = new Error(response.status === 404
+                        ? 'نسخه درخواستی پیدا نشد.'
+                        : 'دریافت اطلاعات آنلاین ممکن نیست.');
+                    error.status = response.status;
+                    throw error;
+                }
+                return await response.json();
+            } finally {
+                clearTimeout(timer);
             }
-            return response.json();
+        }
+
+        function loadBackup() {
+            if (!backupPromise) {
+                backupPromise = (async () => {
+                    // Raw serves the daily refreshed snapshot even if Pages has not rebuilt yet.
+                    try {
+                        return await requestJson('https://raw.githubusercontent.com/dev-ir/v2rayNG-Auto-Downloader/master/releases-cache.json', 3000);
+                    } catch {
+                        return requestJson('./releases-cache.json', 5000);
+                    }
+                })().catch(error => {
+                    backupPromise = null;
+                    throw error;
+                });
+            }
+            return backupPromise;
+        }
+
+        async function fetchJson(path) {
+            try {
+                return await requestJson(API + path);
+            } catch (onlineError) {
+                let backup;
+                try {
+                    backup = await loadBackup();
+                } catch {
+                    throw new Error('دریافت اطلاعات ممکن نیست؛ اتصال اینترنت را بررسی کنید یا از لینک GitHub دانلود کنید.');
+                }
+                let result;
+                if (path === '/releases/latest') {
+                    result = backup.latest;
+                } else if (path.startsWith('/releases?')) {
+                    result = backup.releases;
+                } else if (path.startsWith('/releases/tags/')) {
+                    const tag = decodeURIComponent(path.slice('/releases/tags/'.length));
+                    result = [backup.latest, ...(backup.releases || [])].find(release => release?.tag_name === tag);
+                }
+                if (!result) throw onlineError;
+                backupUpdatedAt = backup.updated_at;
+                return result;
+            }
+        }
+
+        function showBackupNotice() {
+            if (!backupUpdatedAt || document.getElementById('backupNotice')) return;
+            const notice = document.createElement('p');
+            notice.id = 'backupNotice';
+            notice.className = 'update-section';
+            const date = new Date(backupUpdatedAt).toLocaleString('fa-IR');
+            notice.textContent = 'ارتباط با API برقرار نشد؛ اطلاعات پشتیبان نمایش داده می‌شود. آخرین به‌روزرسانی: ' + date;
+            document.getElementById('content').prepend(notice);
+            // A cached version should require an explicit download click.
+            stopCountdown();
         }
 
         async function fetchRequestedRelease(version) {
@@ -296,12 +358,14 @@
 
         async function fetchReleases() {
             stopCountdown();
+            backupUpdatedAt = null;
             try {
                 const requested = new URLSearchParams(window.location.search).get('version');
                 const release = requested
                     ? await fetchRequestedRelease(requested)
                     : await fetchJson('/releases/latest');
                 renderRelease(release, Boolean(requested));
+                showBackupNotice();
                 if (requested) return;
                 // History failures must not hide the current release's downloads.
                 try {
@@ -315,6 +379,7 @@
                         renderHistory();
                     });
                     renderHistory();
+                    showBackupNotice();
                 } catch (error) {
                     document.getElementById('versionsList').textContent = error.message;
                 }

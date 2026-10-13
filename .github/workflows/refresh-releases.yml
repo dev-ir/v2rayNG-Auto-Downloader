@@ -1,0 +1,55 @@
+name: Refresh release cache
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-cache
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch release metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+          def fetch(path):
+              request = urllib.request.Request(
+                  "https://api.github.com/repos/2dust/v2rayNG" + path,
+                  headers={"Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                           "Accept": "application/vnd.github+json",
+                           "User-Agent": "DVHOST-release-cache"})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+          def slim(release):
+              result = {key: release.get(key) for key in
+                        ("tag_name", "body", "published_at", "prerelease", "draft")}
+              result["assets"] = [{key: asset.get(key) for key in
+                                  ("name", "size", "browser_download_url")}
+                                 for asset in release.get("assets", [])]
+              return result
+          latest = fetch("/releases/latest")
+          releases = fetch("/releases?per_page=100")
+          if not latest.get("tag_name") or not isinstance(releases, list) or not releases:
+              raise RuntimeError("Invalid release metadata; keeping previous cache")
+          data = {"updated_at": datetime.now(timezone.utc).isoformat(),
+                  "latest": slim(latest), "releases": [slim(r) for r in releases]}
+          Path("releases-cache.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+          PY
+      - name: Commit cache
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add releases-cache.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh upstream release cache"
+            git push
+          fi
