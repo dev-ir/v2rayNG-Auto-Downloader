@@ -4,484 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دانلود آخرین نسخه v2rayNG</title>
+    <title>DVHOST CLOUD | دانلود v2rayNG</title>
     <!-- فونت Vazirmatn -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap">
     <!-- فونت آیکون Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --secondary-color: #f3f4f6;
-            --text-color: #1f2937;
-            --light-text: #6b7280;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --border-radius: 12px;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 0;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid #f3f4f6;
-            position: relative;
-        }
-
-        .card-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .card-header h1 i {
-            font-size: 1.3em;
-        }
-
-        .card-body {
-            padding: 2rem;
-        }
-
-        .card-footer {
-            padding: 1rem 1.5rem;
-            background-color: var(--secondary-color);
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--light-text);
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(79, 70, 229, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .version-badge {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            font-weight: 600;
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            border: 1px solid #e5e7eb;
-            gap: 0.5rem;
-        }
-
-        .download-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto 1.5rem;
-            padding: 0.875rem 1.5rem;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-            gap: 0.5rem;
-        }
-
-        .download-btn:hover {
-            color: #ccc;
-            text-decoration: none;
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .countdown {
-            text-align: center;
-            color: var(--light-text);
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-        }
-
-        .countdown span {
-            color: var(--danger-color);
-            font-weight: 600;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            text-align: center;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .alert i {
-            font-size: 1.2em;
-        }
-
-        .alert-danger {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        .alert-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.2s ease;
-            font-weight: 500;
-        }
-
-        a:hover {
-            color: var(--primary-hover);
-            text-decoration: underline;
-        }
-
-        /* Dropdown Styles */
-        .dropdown {
-            position: relative;
-            display: none;
-            width: 100%;
-            margin: 0 auto 1.5rem;
-        }
-
-        .dropdown-btn {
-            width: 100%;
-            padding: 0.875rem 1.5rem;
-            background-color: white;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-family: inherit;
-        }
-
-        .dropdown-btn:hover {
-            background-color: #f5f3ff;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            width: 100%;
-            max-height: 300px;
-            overflow-y: auto;
-            box-shadow: var(--shadow);
-            border-radius: var(--border-radius);
-            z-index: 1;
-            margin-top: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-
-        .dropdown-content a {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: right;
-            border-bottom: 1px solid #f3f4f6;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f5f3ff;
-            color: var(--primary-color);
-        }
-
-        .show {
-            display: block;
-        }
-
-        .version-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
-        }
-
-        .version-tag {
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .version-date {
-            font-size: 0.8rem;
-            color: var(--light-text);
-            direction: ltr;
-        }
-
-        .version-divider {
-            height: 1px;
-            background-color: #e5e7eb;
-            margin: 0.25rem 0;
-        }
-
-        .update-section {
-            background-color: #f5f3ff;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            border: 1px solid #e5e7eb;
-        }
-
-        .update-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .update-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 0 0.75rem;
-                margin: 1rem auto;
-            }
-
-            .card-body {
-                padding: 1.5rem;
-            }
-
-            .version-item {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 0.25rem;
-            }
-
-        }
-
-        .version-disabled {
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-        
-        /* Checkbox Styles */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            gap: 0.5rem;
-        }
-        
-        .checkbox-label {
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        
-        .checkbox-input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .beta-badge {
-            background-color: #fef3c7;
-            color: #92400e;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            margin-right: 0.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        /* Accordion Styles */
-        .accordion {
-            margin-top: 1.5rem;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .accordion-item {
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .accordion-item:last-child {
-            border-bottom: none;
-        }
-        
-        .accordion-header {
-            background-color: var(--secondary-color);
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-        
-        .accordion-header:hover {
-            background-color: #e5e7eb;
-        }
-        
-        .accordion-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .accordion-icon {
-            transition: transform 0.3s ease;
-            font-size: 0.9em;
-        }
-        
-        .accordion-item.active .accordion-icon {
-            transform: rotate(180deg);
-        }
-        
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background-color: white;
-        }
-        
-        .accordion-item.active .accordion-content {
-            max-height: 500px;
-        }
-        
-        .accordion-body {
-            padding: 1rem 1.5rem;
-            font-size: 0.875rem;
-            white-space: pre-line;
-            line-height: 1.7;
-            direction: ltr;
-        }
-
-        /* Footer Links */
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .footer-links a {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        [hidden] { display: none !important; }
-        .release-details { margin: 1rem 0; border: 1px solid #e5e7eb; border-radius: 12px; }
-        .release-details summary { cursor: pointer; padding: 1rem; color: var(--primary-color); font-weight: 600; }
-        .asset-list { padding: 0 1rem 1rem; display: grid; gap: .65rem; }
-        .asset-link { display: block; padding: .8rem; border-radius: 8px; background: #f5f3ff; }
-        .asset-link strong, .asset-link small { display: block; }
-        .asset-link small { overflow-wrap: anywhere; color: var(--light-text); margin-top: .3rem; }
-        .cancel-btn { border: 1px solid #e5e7eb; background: white; border-radius: 8px; padding: .25rem .6rem; font-family: inherit; cursor: pointer; }
-        .accordion-body { overflow-wrap: anywhere; max-height: 400px; overflow-y: auto; }
+        :root{color-scheme:dark;--primary-color:#38bdf8;--primary-hover:#7dd3fc;--secondary-color:#122033;--text-color:#e7eef8;--light-text:#93a4bb;--success-color:#34d399;--danger-color:#fb7185;--border-radius:20px;--shadow:0 24px 90px #0006}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Vazirmatn',system-ui,sans-serif;background:#070d17;color:var(--text-color);line-height:1.8;min-height:100vh;padding:40px 16px;background-image:radial-gradient(ellipse at 12% 5%,#07598545,transparent 45%),radial-gradient(ellipse at 90% 50%,#164e6335,transparent 50%)}
+        body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(#ffffff03 1px,transparent 1px),linear-gradient(90deg,#ffffff03 1px,transparent 1px);background-size:48px 48px}
+        .container{position:relative;width:100%;max-width:720px;margin:auto}
+        .brand-bar{display:flex;direction:ltr;align-items:center;justify-content:space-between;gap:12px;margin:0 6px 24px}
+        .brand-lockup{display:flex;align-items:center;gap:12px}
+        .brand-mark{width:46px;height:46px;display:grid;place-items:center;background:linear-gradient(135deg,#38bdf8,#2dd4bf);border-radius:14px;color:#082032;font-weight:900;font-size:23px;box-shadow:0 0 30px #38bdf826}
+        .brand-name{font-size:18px;letter-spacing:2px;font-weight:700;color:#f1f5f9}
+        .brand-subtitle{font-size:10px;color:var(--light-text);letter-spacing:2px}
+        .brand-status{font-size:11px;color:#a7d9e9;border:1px solid #38bdf82b;border-radius:99px;padding:5px 10px;white-space:nowrap}
+        .brand-status::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#2dd4bf;margin-right:7px}
+        .card{background:linear-gradient(155deg,#121e30ee,#0c1423f5);border:1px solid #28364a;border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+        .card-header{padding:34px 24px 28px;text-align:center;border-bottom:1px solid #ffffff0d;background:radial-gradient(ellipse at top,#38bdf811,transparent 75%)}
+        .eyebrow{display:inline-block;color:#67e8f9;font-size:10px;letter-spacing:3px;font-weight:700;margin-bottom:12px}
+        .card-header h1{font-size:clamp(22px,4vw,29px);font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;color:#f8fafc}
+        .card-header h1 i{color:#38bdf8;font-size:24px}
+        .hero-copy{color:var(--light-text);font-size:13px;margin-top:10px}
+        .card-body{padding:28px}
+        .text-center{text-align:center}
+        .version-badge{display:inline-flex;align-items:center;gap:10px;background:#38bdf80d;color:#bce9ff;border:1px solid #38bdf82b;padding:8px 20px;border-radius:99px;margin-bottom:18px;font-weight:700}
+        a{color:#7dd3fc;text-decoration:none;transition:color .2s}
+        a:hover{color:#a5f3fc}
+        .download-btn{display:flex;align-items:center;justify-content:center;gap:10px;max-width:360px;width:100%;margin:20px auto 14px;padding:15px 22px;border:0;border-radius:14px;background:linear-gradient(110deg,#0284c7,#0891b2);box-shadow:0 8px 28px #0284c72b;color:white;font-weight:700;font-size:16px;text-decoration:none;transition:transform .2s,box-shadow .2s}
+        .download-btn::before{content:"↓";font-size:22px}
+        .download-btn:hover{color:white;transform:translateY(-2px);box-shadow:0 12px 35px #0284c744}
+        .countdown{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px;font-size:12px;color:var(--light-text);margin-bottom:20px}
+        .countdown span{color:#67e8f9;font-weight:700}
+        .cancel-btn{font:inherit;color:#cbd5e1;background:#ffffff05;border:1px solid #ffffff1a;border-radius:8px;padding:3px 12px;cursor:pointer}
+        .cancel-btn:hover{background:#ffffff0c}
+        .release-details{margin:16px 0;border:1px solid #ffffff12;border-radius:14px;background:#080f1c33;overflow:hidden}
+        .release-details summary{cursor:pointer;padding:15px 18px;color:#d9e6f6;font-weight:500;font-size:14px}
+        .release-details summary::marker{color:#38bdf8}
+        .release-details[open]>summary{border-bottom:1px solid #ffffff0a;background:#ffffff03}
+        .asset-list{padding:14px;display:grid;gap:10px}
+        .asset-link{display:block;padding:14px 16px;border:1px solid #ffffff0d;border-radius:11px;background:linear-gradient(110deg,#15273b,#111d2e);transition:border-color .2s,transform .2s}
+        .asset-link:hover{border-color:#38bdf860;transform:translateY(-1px)}
+        .asset-link strong{display:block;color:#d5eafa;font-size:13px;font-weight:500}
+        .asset-link small{display:block;font-size:11px;overflow-wrap:anywhere;color:var(--light-text);margin-top:6px}
+        .update-section{padding:16px 18px;border:1px solid #38bdf82b;border-radius:14px;background:#38bdf808;color:#b8d7eb;font-size:13px;margin-bottom:20px}
+        .accordion-body{padding:18px;font-size:12px;line-height:1.9;white-space:pre-line;direction:ltr;overflow-wrap:anywhere;max-height:400px;overflow-y:auto;color:#aebed2}
+        .beta-badge{display:inline-block;color:#fcd34d;background:#f59e0b15;border:1px solid #f59e0b30;border-radius:99px;padding:2px 8px;font-size:10px;margin:0 6px}
+        .version-date{font-size:11px;color:var(--light-text);margin-right:10px;direction:ltr;display:inline-block}
+        .checkbox-container{display:flex;align-items:center;gap:8px;padding:14px 18px;font-size:12px;color:var(--light-text)}
+        .checkbox-input{accent-color:#0ea5e9;width:16px;height:16px}
+        #versionsList{padding:0 12px 10px}
+        .alert{padding:16px;border-radius:12px;text-align:center;margin-bottom:16px;font-size:13px}
+        .alert-danger{color:#fda4af;background:#fb71850a;border:1px solid #fb71852b}
+        .loading{display:flex;align-items:center;flex-direction:column;padding:40px 0;gap:16px;color:var(--light-text);font-size:13px}
+        .spinner{width:36px;height:36px;border:3px solid #38bdf826;border-top-color:#38bdf8;border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .card-footer{padding:20px 24px;border-top:1px solid #ffffff0d;background:#060c1733;text-align:center;color:var(--light-text);font-size:11px}
+        .footer-brand{font-weight:700;letter-spacing:1px;margin-bottom:5px;font-size:12px}
+        .card-body>.text-center:last-child{margin-top:22px;font-size:12px}
+        [hidden]{display:none!important}
+        a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid #67e8f9;outline-offset:4px}
+        @media(max-width:480px){body{padding:24px 12px}.brand-status{font-size:9px;padding:4px 8px}.brand-name{font-size:15px}.brand-subtitle{font-size:8px}.brand-mark{width:40px;height:40px}.card-body{padding:18px}.card-header{padding:26px 16px}.asset-link{padding:12px}.version-date{display:block;margin:5px 0 0}.card{border-radius:20px}}
+        @media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}.download-btn:hover,.asset-link:hover{transform:none}}
     </style>
 </head>
 
 <body>
     <div class="container">
+        <div class="brand-bar">
+            <a class="brand-lockup" href="https://t.me/dvhost_cloud" aria-label="کانال DVHOST CLOUD">
+                <span class="brand-mark" aria-hidden="true">D</span>
+                <span><span class="brand-name">DVHOST CLOUD</span><br><span class="brand-subtitle">TOOLS &amp; DOWNLOADS</span></span>
+            </a>
+            <span class="brand-status">GITHUB RELEASES</span>
+        </div>
         <div class="card">
             <div class="card-header">
-                <h1><i class="fas fa-rocket"></i>دانلود آخرین نسخه v2rayNG</h1>
+                <span class="eyebrow" dir="ltr">V2RAYNG DOWNLOAD CENTER</span>
+                <h1><i class="fas fa-arrow-down" aria-hidden="true"></i>دانلود v2rayNG</h1>
+                <p class="hero-copy">نسخه مناسب دستگاهت را مستقیم از GitHub دریافت کن.</p>
             </div>
             <div class="card-body" id="content">
                 <div class="loading">
@@ -490,7 +93,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div>نوشته شده توسط <a href="https://t.me/dvhost_cloud">DVHOST.CLOUD</a></div>
+                <div class="footer-brand"><a href="https://t.me/dvhost_cloud" dir="ltr">DVHOST CLOUD ↗</a></div>
                 <div>این صفحه آخرین نسخه را از <a
                         href="https://github.com/2dust/v2rayNG/releases" target="_blank">صفحه ریلیزهای GitHub</a> دریافت
                     می‌کند</div>
